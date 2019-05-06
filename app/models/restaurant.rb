@@ -4,7 +4,6 @@ class Restaurant < ApplicationRecord
   has_many :orders
   has_many :reviews
 
-
   validates_associated :category
 	validates :name, presence: true
 	validates :status, presence: true
@@ -13,4 +12,13 @@ class Restaurant < ApplicationRecord
 	validates :street, presence: true
 
 	enum status: { closed: 0, open: 1 }
+
+	geocoded_by :address
+ 
+	after_validation :geocode
+	 
+	def address
+	  [street, number, city, state].compact.join(', ')
+	end
+		
 end
